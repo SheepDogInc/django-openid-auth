@@ -155,6 +155,21 @@ def login_begin(request, template_name='openid/login.html',
     # to use a fixed server URL.
     openid_url = getattr(settings, 'OPENID_SSO_SERVER_URL', None)
 
+    # We may have included a configurable GET parameter to inject into the
+    # OPENID_SSO_SERVER_URL. Inject it if it exists. If the configuration is
+    # there, but the actual parameter is not, proceed as if no
+    # OPENID_SSO_SERVER_URL was specified.
+    if (openid_url and request.GET and
+        hasattr(settings, 'OPENID_INJECT_GET_PARAM')):
+
+        param_value = request.GET.get(
+            getattr(settings, 'OPENID_INJECT_GET_PARAM'))
+
+        if param_value:
+            openid_url = openid_url % param_value
+        else:
+            openid_url = None
+
     if openid_url is None:
         if request.POST:
             login_form = form_class(data=request.POST)
