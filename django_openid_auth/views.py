@@ -159,9 +159,7 @@ def login_begin(request, template_name='openid/login.html',
     # OPENID_SSO_SERVER_URL. Inject it if it exists. If the configuration is
     # there, but the actual parameter is not, proceed as if no
     # OPENID_SSO_SERVER_URL was specified.
-    if (openid_url and request.GET and
-        hasattr(settings, 'OPENID_INJECT_GET_PARAM')):
-
+    if (openid_url and hasattr(settings, 'OPENID_INJECT_GET_PARAM')):
         param_value = request.GET.get(
             getattr(settings, 'OPENID_INJECT_GET_PARAM'))
 
